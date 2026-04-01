@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exclusive Reward</title>
+    <style>
+        /* CSS Styling for a clean, legitimate look */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f2f5;
+            overflow: hidden; /* Prevents scrollbars when the button jumps to edges */
+        }
+        .container {
+            text-align: center;
+            background: white;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            z-index: 10;
+        }
+        h1 {
+            color: #1a1a1a;
+            margin-bottom: 10px;
+        }
+        p {
+            color: #555;
+            margin-bottom: 30px;
+            font-size: 1.1em;
+        }
+        #trick-button {
+            padding: 15px 35px;
+            font-size: 18px;
+            font-weight: bold;
+            color: white;
+            background-color: #28a745; /* Trustworthy green color */
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(40, 167, 69, 0.3);
+            position: relative; /* Allows JS to change it to absolute later */
+            transition: background-color 0.2s ease;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container" id="text-container">
+        <h1>🎉 Claim Your Exclusive Reward! 🎉</h1>
+        <p>Click the button below to instantly receive your prize.</p>
+        <button id="trick-button">Claim Reward</button>
+    </div>
+
+    <script>
+        // JavaScript logic for the prank
+        const button = document.getElementById('trick-button');
+
+        button.addEventListener('mouseover', function() {
+            // Detach button from the normal document flow
+            button.style.position = 'absolute';
+
+            // Calculate random coordinates within the visible window
+            // Subtracting the button's dimensions keeps it from going off-screen
+            const randomX = Math.floor(Math.random() * (window.innerWidth - button.clientWidth));
+            const randomY = Math.floor(Math.random() * (window.innerHeight - button.clientHeight));
+
+            // Apply the new coordinates instantly
+            button.style.left = randomX + 'px';
+            button.style.top = randomY + 'px';
+        });
+
+        // Fallback: If they are smart and use the "Tab" key + "Enter" to click it
+        button.addEventListener('click', function() {
+            alert('Gotcha! Happy April Fools\\' Day! 🤡');
+        });
+    </script>
+</body>
+</html>
