@@ -3,82 +3,266 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Exclusive Reward</title>
+    <title>System Diagnostics</title>
     <style>
-        /* CSS Styling for a clean, legitimate look */
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: #f0f2f5;
             display: flex;
-            flex-direction: column;
-            align-items: center;
             justify-content: center;
+            align-items: center;
             height: 100vh;
             margin: 0;
-            background-color: #f0f2f5;
-            overflow: hidden; /* Prevents scrollbars when the button jumps to edges */
+            overflow: hidden;
+            transition: background-color 0.5s ease;
         }
+
         .container {
-            text-align: center;
             background: white;
             padding: 40px;
             border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            width: 90%;
+            max-width: 450px;
+            position: relative;
             z-index: 10;
         }
+
         h1 {
             color: #1a1a1a;
+            font-size: 22px;
+            margin-top: 0;
             margin-bottom: 10px;
         }
+
         p {
             color: #555;
-            margin-bottom: 30px;
-            font-size: 1.1em;
+            font-size: 15px;
+            margin-bottom: 25px;
+            line-height: 1.5;
         }
-        #trick-button {
-            padding: 15px 35px;
-            font-size: 18px;
-            font-weight: bold;
-            color: white;
-            background-color: #28a745; /* Trustworthy green color */
-            border: none;
+
+        /* Fake Loading Bar */
+        .progress-container {
+            width: 100%;
+            background-color: #e9ecef;
             border-radius: 8px;
+            height: 12px;
+            overflow: hidden;
+            margin-bottom: 15px;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background-color: #007bff;
+            width: 0%;
+            transition: width 0.2s linear;
+        }
+
+        .progress-text {
+            font-size: 13px;
+            color: #666;
+            margin-bottom: 0;
+        }
+
+        /* Prank Button */
+        .btn {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 12px 28px;
+            font-size: 16px;
+            font-weight: 600;
+            border-radius: 6px;
             cursor: pointer;
-            box-shadow: 0 4px 6px rgba(40, 167, 69, 0.3);
-            position: relative; /* Allows JS to change it to absolute later */
-            transition: background-color 0.2s ease;
+            box-shadow: 0 2px 4px rgba(0, 123, 255, 0.3);
+            transition: background-color 0.2s;
+        }
+
+        .btn:hover {
+            background-color: #0056b3;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* Chaos Mode Animations */
+        .chaos-body {
+            animation: rainbow 3s infinite;
+        }
+
+        @keyframes rainbow {
+            0% { background-color: #ffb3ba; }
+            20% { background-color: #ffdfba; }
+            40% { background-color: #ffffba; }
+            60% { background-color: #baffc9; }
+            80% { background-color: #bae1ff; }
+            100% { background-color: #ffb3ba; }
+        }
+
+        .spin {
+            animation: spinBox 1s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
+        }
+
+        @keyframes spinBox {
+            0% { transform: scale(1) rotate(0deg); }
+            50% { transform: scale(0.8) rotate(180deg); }
+            100% { transform: scale(1.1) rotate(360deg); }
+        }
+
+        .emoji-rain {
+            position: absolute;
+            font-size: 30px;
+            user-select: none;
+            pointer-events: none;
+            animation: fall 2s linear infinite;
+        }
+
+        @keyframes fall {
+            from { transform: translateY(-100vh) rotate(0deg); }
+            to { transform: translateY(100vh) rotate(360deg); }
         }
     </style>
 </head>
 <body>
 
-    <div class="container" id="text-container">
-        <h1>🎉 Claim Your Exclusive Reward! 🎉</h1>
-        <p>Click the button below to instantly receive your prize.</p>
-        <button id="trick-button">Claim Reward</button>
+    <div class="container" id="main-box">
+        <div id="loading-phase">
+            <h1 id="main-title">System Optimization</h1>
+            <p>Please wait while we clear your temporary files and optimize your system registry.</p>
+            <div class="progress-container">
+                <div class="progress-bar" id="bar"></div>
+            </div>
+            <p class="progress-text" id="status-text">Initializing...</p>
+        </div>
+
+        <div id="prank-phase" class="hidden">
+            <h1>Verification Required</h1>
+            <p id="prank-desc">The process paused at 99%. To prove you are human and complete the optimization, please click the button below.</p>
+            <button class="btn" id="escape-btn">I am Human</button>
+        </div>
     </div>
 
     <script>
-        // JavaScript logic for the prank
-        const button = document.getElementById('trick-button');
+        // Fake Loading Logic
+        const bar = document.getElementById('bar');
+        const statusText = document.getElementById('status-text');
+        const loadingPhase = document.getElementById('loading-phase');
+        const prankPhase = document.getElementById('prank-phase');
+        const mainTitle = document.getElementById('main-title');
+        
+        let progress = 0;
+        const loadingInterval = setInterval(() => {
+            progress += Math.floor(Math.random() * 15) + 5;
+            
+            if (progress >= 99) {
+                progress = 99;
+                clearInterval(loadingInterval);
+                statusText.style.color = "#d9534f";
+                statusText.innerText = "Error: Human verification timeout.";
+                
+                // Switch to prank phase after a brief pause
+                setTimeout(() => {
+                    loadingPhase.classList.add('hidden');
+                    prankPhase.classList.remove('hidden');
+                }, 1500);
+            }
+            
+            bar.style.width = progress + '%';
+            if (progress < 99) {
+                statusText.innerText = `Optimizing... ${progress}%`;
+            }
+        }, 400);
 
-        button.addEventListener('mouseover', function() {
-            // Detach button from the normal document flow
-            button.style.position = 'absolute';
+        // Escaping Button Logic
+        const btn = document.getElementById('escape-btn');
+        const mainBox = document.getElementById('main-box');
+        const prankDesc = document.getElementById('prank-desc');
+        let hoverCount = 0;
 
-            // Calculate random coordinates within the visible window
-            // Subtracting the button's dimensions keeps it from going off-screen
-            const randomX = Math.floor(Math.random() * (window.innerWidth - button.clientWidth));
-            const randomY = Math.floor(Math.random() * (window.innerHeight - button.clientHeight));
+        const taunts = [
+            "Oops, missed!",
+            "Too slow!",
+            "Try harder!",
+            "Are you a robot?",
+            "My grandma clicks faster.",
+            "Almost had it!",
+            "Is your mouse broken?",
+            "Okay, last chance..."
+        ];
 
-            // Apply the new coordinates instantly
-            button.style.left = randomX + 'px';
-            button.style.top = randomY + 'px';
-        });
+        // Trigger on mouseover or touch
+        const moveButton = (e) => {
+            e.preventDefault(); // Prevent touch taps
+            if (hoverCount >= 8) {
+                triggerChaos();
+                return;
+            }
 
-        // Fallback: If they are smart and use the "Tab" key + "Enter" to click it
-        button.addEventListener('click', function() {
-            alert('Gotcha! Happy April Fools\\' Day! 🤡');
-        });
+            // Switch to fixed positioning so it can fly anywhere on the screen
+            if (hoverCount === 0) {
+                btn.style.position = 'fixed';
+                btn.style.zIndex = '9999';
+            }
+
+            const btnWidth = btn.offsetWidth;
+            const btnHeight = btn.offsetHeight;
+            const maxX = window.innerWidth - btnWidth - 20;
+            const maxY = window.innerHeight - btnHeight - 20;
+            
+            // Generate random coordinates
+            const randomX = Math.max(10, Math.floor(Math.random() * maxX));
+            const randomY = Math.max(10, Math.floor(Math.random() * maxY));
+            
+            btn.style.left = randomX + 'px';
+            btn.style.top = randomY + 'px';
+
+            // Update taunt text
+            btn.innerText = taunts[hoverCount] || "Catch me!";
+            hoverCount++;
+        };
+
+        btn.addEventListener('mouseover', moveButton);
+        btn.addEventListener('touchstart', moveButton);
+
+        // Climax: Chaos Mode!
+        function triggerChaos() {
+            btn.classList.add('hidden'); // Hide the button
+            document.body.classList.add('chaos-body'); // Rainbow background
+            mainBox.classList.add('spin'); // Spin the box
+            
+            // Change the text to the reveal
+            document.querySelector('#prank-phase h1').innerText = "🤡 APRIL FOOLS! 🤡";
+            document.querySelector('#prank-phase h1').style.fontSize = "32px";
+            prankDesc.innerHTML = "<strong>Gotcha!</strong><br><br>Don't worry, your system is perfectly fine. Have a great day!";
+            prankDesc.style.fontSize = "18px";
+            prankDesc.style.color = "#1a1a1a";
+
+            // Spawn falling emojis
+            for (let i = 0; i < 30; i++) {
+                createEmoji();
+            }
+        }
+
+        // Catch for keyboard navigators who try to Tab + Enter
+        btn.addEventListener('click', triggerChaos);
+
+        // Fun extra: Falling emojis
+        function createEmoji() {
+            const emojis = ['🤡', '🎉', '🤣', '💻', '✨'];
+            const emoji = document.createElement('div');
+            emoji.innerText = emojis[Math.floor(Math.random() * emojis.length)];
+            emoji.className = 'emoji-rain';
+            
+            // Randomize starting position and animation duration
+            emoji.style.left = Math.random() * 100 + 'vw';
+            emoji.style.animationDuration = (Math.random() * 2 + 1) + 's';
+            emoji.style.animationDelay = Math.random() * 2 + 's';
+            
+            document.body.appendChild(emoji);
+        }
     </script>
 </body>
 </html>
